@@ -11,7 +11,115 @@
   El ábrol utilizado para hacer los tests se encuentra representado en la imagen bst.png dentro del directorio homework.
 */
 
-function BinarySearchTree() {}
+function BinarySearchTree(value) {
+  this.value = value;
+  this.right = null;
+  this.left = null;
+}
+
+
+
+BinarySearchTree.prototype.insert = function (value) {
+  if (value < this.value) {
+    if (this.left) {
+      this.left.insert(value);
+    }
+    else {
+      this.left = new BinarySearchTree(value);
+    }
+  } else {
+    if (this.right) {
+      this.right.insert(value);
+    }
+    else {
+      this.right = new BinarySearchTree(value);
+    }
+  }
+
+}
+
+BinarySearchTree.prototype.contains = function (value) {
+  if (this.value === value) {
+    return true;
+  }
+  if (this.left?.contains(value)) {
+    return true
+  }
+  if (this.right) {
+    if (this.right.contains(value)) {
+      return true;
+    }
+  }
+  return false;
+}
+BinarySearchTree.prototype.depthFirstForEach = function (cb, option) {
+  switch (option) {
+    case 'pre-order': {
+      cb(this.value);
+
+      if (this.left) {
+        this.left.depthFirstForEach(cb, option);
+      }
+
+      if (this.right) {
+        this.right.depthFirstForEach(cb, option);
+      }
+      break;
+    }
+
+    case 'post-order': {
+      if (this.left) {
+        this.left.depthFirstForEach(cb, option)
+      }
+
+      if (this.right) {
+        this.right.depthFirstForEach(cb, option)
+      }
+
+      cb(this.value);
+      break;
+    }
+    default: {
+      if (this.left) {
+        this.left.depthFirstForEach(cb, option)
+      }
+      cb(this.value)
+
+      if (this.right) {
+        this.right.depthFirstForEach(cb, option)
+      }
+      break;
+    }
+  }
+}
+
+
+
+BinarySearchTree.prototype.breadthFirstForEach = function (cb, listaDeEspera = []) {
+  cb(this.value);
+  if (this.left) listaDeEspera.push(this.left);
+  if (this.right) listaDeEspera.push(this.right);
+  const node = listaDeEspera.shift()
+  if (node) node.breadthFirstForEach(cb, listaDeEspera)
+}
+
+
+
+
+
+BinarySearchTree.prototype.size = function () {
+  let resultado = 1;
+
+  if (this.left) {
+    resultado += this.left.size();
+  }
+
+  if (this.right) {
+    resultado += this.right.size();
+  }
+
+  return resultado;
+}
 
 // No modifiquen nada debajo de esta linea
 // --------------------------------
